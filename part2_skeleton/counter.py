@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 
 
 class Counter(object):
@@ -81,6 +81,7 @@ class TimeIndependentCounter(Counter):
         """
         #######################################
         # TODO Task 2.4.1: Your code goes here
+        self.values.append(value)
         pass
         #######################################
 
@@ -90,6 +91,9 @@ class TimeIndependentCounter(Counter):
         """
         #######################################
         # TODO Task 2.4.1: Your code goes here
+        if len(self.values) == 0:
+            return 0
+        return np.mean(self.values)
         pass
         #######################################
 
@@ -101,6 +105,9 @@ class TimeIndependentCounter(Counter):
         """
         #######################################
         # TODO Task 2.4.1: Your code goes here
+        if len(self.values) == 0:
+            return 0
+        return np.var(self.values, ddof=1 if not biased else 0)
         pass
         #######################################
 
@@ -110,6 +117,9 @@ class TimeIndependentCounter(Counter):
         """
         #######################################
         # TODO Task 2.4.1: Your code goes here
+        if len(self.values) == 0:
+            return 0
+        return np.std(self.values, ddof=1)
         pass
         #######################################
 
@@ -129,7 +139,8 @@ class TimeDependentCounter(Counter):
         super(TimeDependentCounter, self).__init__(name)
         #######################################
         # TODO Task 2.4.2: Your code goes here
-        pass
+        self.timestamps = []
+        self.durations = []
         #######################################
 
     def count(self, value: float, now: float):
@@ -141,7 +152,12 @@ class TimeDependentCounter(Counter):
         """
         #######################################
         # TODO Task 2.4.2: Your code goes here
-        pass
+        if self.timestamps:
+            last_timestamp = self.timestamps[-1]
+            duration = now - last_timestamp
+            self.durations.append(duration)
+        self.values.append(value)
+        self.timestamps.append(now)
         #######################################
 
     def get_mean(self):
@@ -150,7 +166,11 @@ class TimeDependentCounter(Counter):
         """
         #######################################
         # TODO Task 2.4.2: Your code goes here
-        pass
+        if not self.durations:
+            return 0
+        weighted_sum = sum(value * duration for value, duration in zip(self.values, self.durations))
+        total_duration = sum(self.durations)
+        return weighted_sum / total_duration
         #######################################
 
     def get_var(self):
@@ -159,7 +179,13 @@ class TimeDependentCounter(Counter):
         """
         #######################################
         # TODO Task 2.4.2: Your code goes here
-        pass
+        if not self.durations:
+            return 0
+        mean = self.get_mean()
+        squared_deviations = [(value - mean) ** 2 for value in self.values]
+        variance = sum(squared_deviations) / len(self.values)
+        return variance
+
         #######################################
 
     def get_stddev(self):
@@ -168,7 +194,9 @@ class TimeDependentCounter(Counter):
         """
         #######################################
         # TODO Task 2.4.2: Your code goes here
-        pass
+        if not self.durations:
+            return 0
+        return self.get_var() ** 0.5
         #######################################
 
     def reset(self):
@@ -177,6 +205,8 @@ class TimeDependentCounter(Counter):
         """
         #######################################
         # TODO Task 2.4.2: Your code goes here
-        pass
+        super(TimeDependentCounter, self).reset()
+        self.timestamps = []
+        self.durations = []
         #######################################
 

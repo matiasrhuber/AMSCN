@@ -18,6 +18,8 @@ class FiniteQueue(object):
         """
         #######################################
         # TODO Task 2.2.1: Your code goes here
+        self.max_size = max_size
+        self.queue = PriorityQueue(maxsize=self.max_size)
         pass
         #######################################
 
@@ -29,6 +31,11 @@ class FiniteQueue(object):
         """
         #######################################
         # TODO Task 2.2.1: Your code goes here
+        if self.queue.full():
+            return False
+        else:
+            self.queue.put(packet)
+            return True
         pass
         #######################################
 
@@ -39,6 +46,9 @@ class FiniteQueue(object):
         """
         #######################################
         # TODO Task 2.2.1: Your code goes here
+        if self.queue.empty():
+            return None #maybe False instead
+        return self.queue.get() #already ascending order
         pass
         #######################################
 
@@ -48,6 +58,7 @@ class FiniteQueue(object):
         """
         #######################################
         # TODO Task 2.2.1: Your code goes here
+        return self.queue.qsize()
         pass
         #######################################
 
@@ -57,7 +68,9 @@ class FiniteQueue(object):
         """
         #######################################
         # TODO Task 2.2.1: Your code goes here
+        return self.queue.empty()
         pass
+
         #######################################
 
     def flush(self):
@@ -66,5 +79,7 @@ class FiniteQueue(object):
         """
         #######################################
         # TODO Task 2.2.1: Your code goes here
+        while not self.queue.empty():
+            self.queue.get()
         pass
         #######################################

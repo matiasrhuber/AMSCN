@@ -28,24 +28,26 @@ class SysState(object):
         self.packets_total = 0
         # TODO Task 2.3.1: comment these lines
         #######################################
-        self.server = Server(sim, sim.sim_param.SERVICE_RATE)
-        self.user = User(sim, sim.sim_param.ARRIVAL_RATE)
+        # self.server = Server(sim, sim.sim_param.SERVICE_RATE)
+        # self.user = User(sim, sim.sim_param.ARRIVAL_RATE)
         #######################################
 
         #######################################
         # TODO Task 2.3.1: and uncomment these lines
         #######################################
-        # self.servers = self.create_servers(sim, sim.sim_param.NUM_SERVERS, sim.sim_param.SERVICE_RATES)
-        # self.users = self.create_users(sim, sim.sim_param.NUM_USERS, sim.sim_param.ARRIVAL_RATES)
+        self.servers = self.create_servers(sim, sim.sim_param.NUM_USERS, sim.sim_param.SERVICE_RATES)
+        self.users = self.create_users(sim, sim.sim_param.NUM_USERS, sim.sim_param.ARRIVAL_RATES)
         #######################################
 
         # TODO Task 2.2.2: comment code below
         #######################################
-        self.buffer_content = 0
+        # self.buffer_content = 0
+        
         ######################################
 
         #######################################
         # TODO Task 2.2.2: Rewrite code from above, your code goes here
+        self.buffer = FiniteQueue() #buffer_size
         #######################################
 
     def reset(self):
@@ -58,13 +60,13 @@ class SysState(object):
         self.packets_total = 0
         # TODO Task 2.3.1: comment these lines
         #######################################
-        self.server.reset(self.sim.sim_param.SERVICE_RATE)
-        self.user.reset(self.sim.sim_param.ARRIVAL_RATE)
+        # self.server.reset(self.sim.sim_param.SERVICE_RATE)
+        # self.user.reset(self.sim.sim_param.ARRIVAL_RATE)
         #######################################
 
         # TODO Task 2.3.1: and uncomment these lines
         #######################################
-        '''
+    
         if len(self.servers) == self.sim.sim_param.NUM_SERVERS:
             for i in range(self.sim.sim_param.NUM_SERVERS):
                 self.servers[i].reset(self.sim.sim_param.SERVICE_RATES[i])
@@ -75,16 +77,18 @@ class SysState(object):
                 self.users[i].reset(self.sim.sim_param.ARRIVAL_RATES[i])
         else:
             self.users = self.create_users(self.sim, self.sim.sim_param.NUM_USERS, self.sim.sim_param.ARRIVAL_RATES)
-        '''
+     
         #######################################
 
         # TODO Task 2.2.2: comment code below
         #######################################
-        self.buffer_content = 0
+        # self.buffer_content = 0
+        
         #######################################
 
         #######################################
         # TODO Task 2.2.2: Rewrite code from above, your code goes here
+        self.buffer = FiniteQueue(self.sim.sim_param.S) #S is the correct buffer max??
         pass
         #######################################
 
@@ -130,6 +134,10 @@ class SysState(object):
         """
         #######################################
         # TODO Task 2.3.1: Your code goes here
+        users = []
+        for i in range(num_users):
+            users.append(User(sim, arrival_rates[i]))
+        return users
         pass
         #######################################
 
@@ -139,16 +147,18 @@ class SysState(object):
         """
         # TODO Task 2.3.2: comment code below
         ######################################
-        self.user.generate_packet_arrival()
+        # self.user.generate_packet_arrival()
         ######################################
 
         ######################################
         # TODO Task 2.3.2: Rewrite code from above, your code goes here
+        for user in self.users:
+            user.generate_packet_arrival()
         pass
         ######################################
 
     # TODO Task 2.2.2: Correct function declaration according to task description
-    def add_packet_to_buffer(self):
+    def add_packet_to_buffer(self, packet: Packet):
         """
         Attempt to add packet to buffer.
         :param packet: packet to be added to buffer
@@ -158,15 +168,20 @@ class SysState(object):
         #######################################
         # DONE Task 1.1.1:
         # Check if buffer is not full and add packet if it is the case
-        if self.buffer_content < self.sim.sim_param.S:
-            self.buffer_content += 1
-            return True
+        # if self.buffer_content < self.sim.sim_param.S:
+        #     self.buffer_content += 1
+        #     return True
         #######################################
 
         #######################################
         # TODO Task 2.2.2: Rewrite code from above, your code goes here
-        pass
         #######################################
+        if not self.buffer.is_full():
+            self.buffer.enqueue(packet)
+            return True
+        else:
+            self.packet_dropped()
+            return False
 
         #######################################
         # DONE Task 1.1.6:
@@ -175,7 +190,7 @@ class SysState(object):
         #######################################
 
     # TODO Task 2.2.2: Correct function declaration according to task description
-    def start_serving_packet(self):
+    def start_serving_packet(self, packet: Packet):
         """
         Attempt to start service of newly arrived packet.
         :param pkt_arrived: packet to be served
@@ -188,14 +203,19 @@ class SysState(object):
         #######################################
         # DONE Task 1.1.5:
         # Try to start service, note that the flag is set to true, as there is a new packet to be served
-        if self.server.start_service(pkt_arrived=True):
-            return True
-        return False
+        # if self.server.start_service(pkt_arrived=True):
+        #     return True
+        # return False
         #######################################
 
         #######################################
         # TODO Task 2.3.3: Rewrite code from above, your code goes here
-        pass
+        self.packet_entered()
+
+        for server in self.servers:
+            if server.start_service(packet):
+                return True
+        return False
         #######################################
 
 

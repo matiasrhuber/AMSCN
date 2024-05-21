@@ -1,4 +1,4 @@
-from matplotlib import pyplot
+from matplotlib import pyplot as plt
 
 
 class BoxPlot(object):
@@ -11,7 +11,8 @@ class BoxPlot(object):
         """
         #######################################
         # TODO Task 2.5.1: Your code goes here
-        pass
+        self.name = name
+        self.data = []
         #######################################
 
     def add_counter_data(self, values: list):
@@ -21,7 +22,7 @@ class BoxPlot(object):
         """
         #######################################
         # TODO Task 2.5.1: Your code goes here
-        pass
+        self.data.append(values)
         #######################################
 
     def plot(self, labels: list = None):
@@ -31,5 +32,10 @@ class BoxPlot(object):
         """
         #######################################
         # TODO Task 2.5.1: Your code goes here
-        pass
+        plt.figure()
+        plt.boxplot(self.data, labels=labels)
+        plt.xlabel('Counter')
+        plt.ylabel('Values')
+        plt.title('Boxplot of {}'.format(self.name))
+        plt.show()
         #######################################

@@ -36,7 +36,11 @@ class Packet(object):
         """
         #######################################
         # TODO Task 2.1.1: Your code goes here
-        pass
+        if self.t_arrival < other.t_arrival:
+            return True
+        else: 
+            return False
+        pass # Possibly have to check if other is Packet
         #######################################
 
     def start_service(self, start_service_timestamp: float):
@@ -46,6 +50,9 @@ class Packet(object):
         """
         #######################################
         # TODO Task 2.1.2: Your code goes here
+        self.in_service = True
+        self.t_start_service = start_service_timestamp
+
         pass
         #######################################
 
@@ -56,6 +63,9 @@ class Packet(object):
         """
         #######################################
         # TODO Task 2.1.2: Your code goes here
+        self.completed = True
+        self.t_complete = complete_service_timestamp
+
         pass
         #######################################
 
@@ -66,6 +76,7 @@ class Packet(object):
         """
         #######################################
         # TODO Task 2.1.2: Your code goes here
+        return self.t_start_service - self.t_arrival
         pass
         #######################################
 
@@ -76,6 +87,7 @@ class Packet(object):
         """
         #######################################
         # TODO Task 2.1.2: Your code goes here
+        return self.t_complete - self.t_start_service
         pass
         #######################################
 
@@ -86,6 +98,7 @@ class Packet(object):
         """
         #######################################
         # TODO Task 2.1.2: Your code goes here
+        return self.t_complete - self.t_arrival
         pass
         #######################################
 
@@ -96,6 +109,7 @@ class Packet(object):
         """
         #######################################
         # TODO Task 2.1.2: Your code goes here
+        return self.iat
         pass
         #######################################
 

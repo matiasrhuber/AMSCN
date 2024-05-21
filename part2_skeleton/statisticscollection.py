@@ -63,7 +63,10 @@ class StatCollection(object):
         """
         #######################################
         # TODO Task 2.4.3: Your code goes here
-        pass
+        self.packets_total += 1
+        if packet.t_start_service is not None:
+            waiting_time = packet.t_start_service - packet.t_arrival
+            self.cnt_wt.count(waiting_time)
         #######################################
 
     def count_queue_and_servers(self, now: float):
@@ -77,7 +80,10 @@ class StatCollection(object):
         """
         ######################################
         # TODO Task 2.4.3: Your code goes here
-        pass
+        queue_length = len(self.sim.sys_state.buffer)
+        self.cnt_ql.count(queue_length, now)
+        busy_servers = sum(server.busy for server in self.sim.sys_state.servers)
+        self.cnt_bs.count(busy_servers, now)
         #######################################
 
     def gather_results(self):

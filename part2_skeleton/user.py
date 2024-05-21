@@ -50,5 +50,5 @@ class User(object):
         """
         #######################################
         # TODO Task 2.2.3: Your code goes here
-        pass
+        return Packet(arrival_time=self.sim.sys_state.now)
         #######################################
