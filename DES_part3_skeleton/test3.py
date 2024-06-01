@@ -14,6 +14,7 @@ class DESTest(unittest.TestCase):
     sim = Simulation()
 
     def test_uniform_rns(self):
+        print('RUNNING test_uniform_rns')
         uniform_rns = UniformRNS(10,20)
         samples = []
         for _ in range(100000):
@@ -26,6 +27,7 @@ class DESTest(unittest.TestCase):
         """
         Test the basic implementation of rho and the system utilization.
         """
+        print('RUNNING test_single_user_server_rns')
         DESTest.sim.sim_param.SIM_TIME = 100000000
         DESTest.sim.sim_param.S = 10000
         DESTest.sim.sim_param.NUM_USERS = 1
@@ -46,6 +48,7 @@ class DESTest(unittest.TestCase):
         """
         Test the basic implementation of rho and the system utilization.
         """
+        print('RUNNING test_multiple_user_server_rns')
         DESTest.sim.sim_param.SIM_TIME = 100000000
         DESTest.sim.sim_param.S = 100000
         DESTest.sim.sim_param.SERVERS_SEEDS = [1]
@@ -86,6 +89,7 @@ class DESTest(unittest.TestCase):
         First, 1000 samples are drawn from a normal distribution. Afterwards the chi square test is run on them to see,
         whether they follow the original or another given distribution.
         """
+        print('RUNNING test_chi_square_normal')
         alpha = .1
         values = []
         values2 = []
@@ -115,6 +119,7 @@ class DESTest(unittest.TestCase):
         First, 1000 samples are drawn from an exponential distribution. Afterwards the chi square test is run on them to see,
         whether they follow the original or another given distribution.
         """
+        print('RUNNING test_chi_square_exp')
         alpha = .1
         values = []
         values2 = []

@@ -34,35 +34,48 @@ class ChiSquare(object):
         #######################################
         # TODO Task 3.7.1: Your code goes here.
         # Expected frequencies
-        if self.dist_f == scipy.stats.norm:
-            expected_freq = np.diff(self.dist_f.ppf([0, alpha], loc=mean, scale=var**0.5))
-        elif self.dist_f == scipy.stats.expon:  
-            expected_freq = np.diff(self.dist_f.ppf([0, alpha], loc=0, scale=1 / mean))
+
+        k = len(self.emp_n)  
+        observed = np.array(self.emp_n)
         
-        # if frequencies are below 5 use neighbouring frequencies
-        combined_emp_x = []
-        combined_emp_n = []
-        curr_freq_sum = 0
-        for x, n in zip(self.emp_x, self.emp_n):
-            if curr_freq_sum + n < 5:
-                curr_freq_sum += n
-            else:
-                combined_emp_x.append(x)
-                combined_emp_n.append(curr_freq_sum + n)
-                curr_freq_sum = 0
-            combined_emp_x.append(x)
-            combined_emp_n.append(curr_freq_sum + n)
-            self.emp_x = combined_emp_x
-            self.emp_n = combined_emp_n
+        if self.distr == TestDist.NORMAL:
+            expected = np.diff(scipy.stats.norm.cdf(self.emp_x, loc=mean, scale=np.sqrt(var))) * sum(observed)
+        elif self.distr == TestDist.EXPONENTIAL:
+            expected = np.diff(scipy.stats.expon.cdf(self.emp_x, loc=0, scale=mean)) * sum(observed)
+       
+        # if self.dist_f == scipy.stats.norm:
+        #     expected_freq = np.diff(self.dist_f.ppf(q=[0,alpha], loc=mean, scale=var**0.5))
+        # elif self.dist_f == scipy.stats.expon:  
+        #     expected_freq = np.diff(self.dist_f.ppf([0,alpha], loc=0, scale=mean))
+        # print('alpha:', alpha, 'mean:', mean, 'var:', var)
+        # # if frequencies are below 5 use neighbouring frequencies
+        # combined_emp_x = []
+        # combined_emp_n = []
+        # curr_freq_sum = 0
+        # print(list(self.emp_n))
+
+        # print('emp_x', list(self.emp_x))
+        # # for x, n in zip(self.emp_x, self.emp_n):
+        # #     if curr_freq_sum + n < 5:
+        # #         curr_freq_sum += n
+        # #     else:
+        # #         combined_emp_x.append(x)
+        # #         combined_emp_n.append(curr_freq_sum + n)
+        # #         curr_freq_sum = 0
+        # #     combined_emp_x.append(x)
+        # #     combined_emp_n.append(curr_freq_sum + n)
+        # #     self.emp_x = combined_emp_x
+        # #     self.emp_n = combined_emp_n
         
-        observed_freq = self.emp_n
-        print(expected_freq)
-        chi_sq = np.sum((observed_freq - expected_freq)**2 / expected_freq)
+        # observed_freq = self.emp_n
+        # print(expected_freq[0], self.emp_n)
+        # chi_sq = np.sum((observed_freq - expected_freq)**2 / expected_freq)
+        # print(chi_sq)
         
-        df = len(observed_freq) - est_parameters - 1
+        # df = len(observed_freq) - est_parameters - 1
         
-        critical_value = scipy.stats.chi2.ppf(1 - alpha, df)
-        
+        # critical_value = scipy.stats.chi2.ppf(1 - alpha, df)
+       
         return chi_sq, critical_value
         #######################################
 

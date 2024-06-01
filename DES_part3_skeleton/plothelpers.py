@@ -100,7 +100,7 @@ class Histogram(object):
             if diag_type == HistType.BAR:
                 plt.hist(values, bins=n_bins, weights=weights, color=self.colors[i % len(self.colors)], alpha=0.5, label=f'Data {i+1}')
             elif diag_type == HistType.LINE:
-                plt.hist(values, bins=n_bins, weights=weights, histtype='step', color=self.colors[i % len(self.colors)], label=f'Data {i+1}')
+                plt.hist(values, bins=n_bins, weights=weights, histtype='step', color=self.colors[i % len(self.colors)], label=f'Data {i+1}') #if label
         
         plt.xlabel('Values')
         plt.ylabel('Frequency')
