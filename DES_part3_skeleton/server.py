@@ -15,7 +15,7 @@ class Server(object):
     """
 
     # TODO Task 3.1.2: Correct function declaration according to task description.
-    def __init__(self, sim: Simulation, service_rate: float):
+    def __init__(self, sim: Simulation, service_rate: float,  seed: float=None):
         """
         Create a server object
         :param service_rate: parameter for the service rate - how many packets are served in millisecond
@@ -34,11 +34,12 @@ class Server(object):
 
         #######################################
         # TODO Task 3.1.2: Your code goes here.
+        self.service_time_generator = ExponentialRNS(1 / service_rate, seed)
         pass
         #######################################
 
     # TODO Task 3.1.2: Correct function declaration according to task description.
-    def reset(self, service_rate: float):
+    def reset(self, service_rate: float, seed: float=None):
         """
         reset Server object
         :param service_rate: parameter for the service rate - how many packets are served in millisecond
@@ -46,9 +47,11 @@ class Server(object):
         """
         #######################################
         # TODO Task 3.1.2: Your code goes here.
-        pass
+        if self.service_rate != service_rate:
+            self.service_time_generator = ExponentialRNS(1 / service_rate)  # Recreate RNS if service_rate changes
+            self.service_rate = service_rate
         #######################################
-        self.service_rate = service_rate
+        #self.service_rate = service_rate
 
         #######################################
         # DONE Task 2.2.4:
@@ -107,7 +110,8 @@ class Server(object):
         """
         #######################################
         # TODO Task 3.1.2: Modify code below
-        ev = ServiceCompletion(self.sim, self.sim.sys_state.now + 1 / self.service_rate, self)
+        service_time = self.service_time_generator.next()  # Draw service time from the RNS
+        ev = ServiceCompletion(self.sim, self.sim.sys_state.now + service_time, self)
         self.sim.event_chain.insert(ev)
         #######################################
 

@@ -1,6 +1,7 @@
 from matplotlib import pyplot
 from enum import Enum
 import numpy as np
+import matplotlib as plt
 
 class BoxPlot(object):
     colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
@@ -73,6 +74,7 @@ class Histogram(object):
         """
         #######################################
         # TODO Task 3.2.1: Your code goes here.
+        self.counters_values.append((values, weights))
         pass
         #######################################
 
@@ -93,5 +95,17 @@ class Histogram(object):
         """
         #######################################
         # TODO Task 3.2.2: Your code goes here.
+        plt.figure()
+        for i, (values, weights) in enumerate(self.counters_values):
+            if diag_type == HistType.BAR:
+                plt.hist(values, bins=n_bins, weights=weights, color=self.colors[i % len(self.colors)], alpha=0.5, label=f'Data {i+1}')
+            elif diag_type == HistType.LINE:
+                plt.hist(values, bins=n_bins, weights=weights, histtype='step', color=self.colors[i % len(self.colors)], label=f'Data {i+1}')
+        
+        plt.xlabel('Values')
+        plt.ylabel('Frequency')
+        plt.title('Histogram')
+        plt.legend()
+        plt.show()
         pass
         #######################################

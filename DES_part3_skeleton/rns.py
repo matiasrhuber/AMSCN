@@ -44,6 +44,7 @@ class ExponentialRNS(RNS):
         super(ExponentialRNS, self).__init__(the_seed)
         #######################################
         # TODO Task 3.1.1: Your code goes here.
+        self.lambda_x = lambda_x
         pass
         #######################################
 
@@ -54,6 +55,7 @@ class ExponentialRNS(RNS):
         """
         #######################################
         # TODO Task 3.1.1: Your code goes here.
+        self.lambda_x = lambda_x
         pass
         #######################################
 
@@ -63,6 +65,7 @@ class ExponentialRNS(RNS):
         """
         #######################################
         # TODO Task 3.1.1: Your code goes here.
+        return -math.log(1 - self.r.random()) / self.lambda_x
         pass
         #######################################
 
@@ -86,6 +89,8 @@ class UniformRNS(RNS):
         super(UniformRNS, self).__init__(the_seed)
         #######################################
         # TODO Task 3.1.1: Your code goes here.
+        self.a = a
+        self.b = b
         pass
         #######################################
 
@@ -97,6 +102,8 @@ class UniformRNS(RNS):
         """
         #######################################
         # TODO Task 3.1.1: Your code goes here.
+        self.a = a
+        self.b = b
         pass
         #######################################
 
@@ -106,5 +113,6 @@ class UniformRNS(RNS):
         """
         #######################################
         # TODO Task 3.1.1: Your code goes here.
+        return self.a + (self.b - self.a) * self.r.random()
         pass
         #######################################

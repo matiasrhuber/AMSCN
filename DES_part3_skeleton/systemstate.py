@@ -30,8 +30,9 @@ class SysState(object):
         #######################################
         # DONE Task 2.3.1:
         # TODO Task 3.1.4: Modify code below.
-        self.servers = self.create_servers(sim, sim.sim_param.NUM_SERVERS, sim.sim_param.SERVICE_RATES)
-        self.users = self.create_users(sim, sim.sim_param.NUM_USERS, sim.sim_param.ARRIVAL_RATES)
+        self.servers = self.create_servers(sim, sim.sim_param.NUM_SERVERS, sim.sim_param.SERVICE_RATES, sim.sim_param.SERVERS_SEEDS)
+        self.users = self.create_users(sim, sim.sim_param.NUM_USERS, sim.sim_param.ARRIVAL_RATES, sim.sim_param.USERS_SEEDS)
+        
         #######################################
 
         #######################################
@@ -59,23 +60,24 @@ class SysState(object):
             for i in range(self.sim.sim_param.NUM_SERVERS):
                 #######################################
                 # TODO Task 3.1.4: Modify code below.
-                self.servers[i].reset(self.sim.sim_param.SERVICE_RATES[i])
+                self.servers[i].reset(self.sim.sim_param.SERVICE_RATES[i], self.sim.sim_param.SERVERS_SEEDS[i])
+                
                 #######################################
         else:
             #######################################
             # TODO Task 3.1.4: Modify code below.
-            self.servers = self.create_servers(self.sim, self.sim.sim_param.NUM_SERVERS, self.sim.sim_param.SERVICE_RATES)
+            self.servers = self.create_servers(self.sim, self.sim.sim_param.NUM_SERVERS, self.sim.sim_param.SERVICE_RATES, self.sim.sim_param.SERVERS_SEEDS)
             #######################################
         if len(self.users) == self.sim.sim_param.NUM_USERS:
             for i in range(self.sim.sim_param.NUM_USERS):
                 #######################################
                 # TODO Task 3.1.4: Modify code below.
-                self.users[i].reset(self.sim.sim_param.ARRIVAL_RATES[i])
+                self.users[i].reset(self.sim.sim_param.ARRIVAL_RATES[i], self.sim.sim_param.USERS_SEEDS)
                 #######################################
         else:
             #######################################
             # TODO Task 3.1.4: Modify code below.
-            self.users = self.create_users(self.sim, self.sim.sim_param.NUM_USERS, self.sim.sim_param.ARRIVAL_RATES)
+            self.users = self.create_users(self.sim, self.sim.sim_param.NUM_USERS, self.sim.sim_param.ARRIVAL_RATES, self.sim.sim_param.USERS_SEEDS)
             #######################################
         #######################################
 
@@ -116,7 +118,7 @@ class SysState(object):
     ######################################
 
     # TODO Task 3.1.4: Correct function declaration according to task description.
-    def create_servers(self, sim: Simulation, num_servers: int, service_rates: list):
+    def create_servers(self, sim: Simulation, num_servers: int, service_rates: list, seeds: list):
         """
         Create servers objects with appropriate parameters.
         :param sim: simulation object
@@ -129,11 +131,15 @@ class SysState(object):
         # initialize list of servers
         #######################################
         # TODO Task 3.1.4: Modify code below.
-        return [Server(sim, service_rates[i]) for i in range(num_servers)]
+        servers = []
+        for i in range(num_servers):
+            seed = seeds[i] if i < len(seeds) else None
+            servers.append(Server(sim, service_rates[i], seed))
+        return servers
         #######################################
 
     # TODO Task 3.1.4: Correct function declaration according to task description.
-    def create_users(self, sim: Simulation, num_users: int, arrival_rates: list):
+    def create_users(self, sim: Simulation, num_users: int, arrival_rates: list, seeds: list):
         """
         Create users objects with appropriate parameters.
         :param sim: simulation object
@@ -146,7 +152,11 @@ class SysState(object):
         # initialize list of users
         #######################################
         # TODO Task 3.1.4: Modify code below.
-        return [User(sim, arrival_rates[i]) for i in range(num_users)]
+        users = []
+        for i in range(num_users):
+            seed = seeds[i] if i < len(seeds) else None
+            users.append(User(sim, arrival_rates[i], seed))
+        return users
         #######################################
 
     def start_users(self):
